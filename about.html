@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>About — Bloom & Co</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══════════════════════════════════════════
+   BLOOM & CO — SHARED STYLES
+   ═══════════════════════════════════════════ */
+
+/* ─── TOKENS ─── */
+:root {
+  --bg:         #fff8f5;
+  --bg2:        #fdeef0;
+  --ink:        #3d2a2e;
+  --ink2:       #9e7a80;
+  --accent:     #c97b8a;
+  --accent2:    #e8b4bc;
+  --accent3:    #c4a0a8;
+  --border:     rgba(201,123,138,.18);
+  --nav-h:      66px;
+}
+
+/* ─── RESET ─── */
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+img { display:block; max-width:100%; }
+a { color:inherit; text-decoration:none; }
+ul { list-style:none; }
+button { cursor:pointer; font-family:inherit; border:none; background:none; }
+
+/* ─── NAV ─── */
+.nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 clamp(1rem,4vw,3rem);
+  height:var(--nav-h);
+  background:rgba(255,248,245,0.96);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .3s;
+}
+.nav.scrolled { box-shadow:0 2px 20px rgba(201,123,138,.08); }
+.nav-logo {
+  font-family:'Cormorant',serif;
+  font-size:1.5rem; font-weight:600;
+  color:var(--accent); flex-shrink:0;
+}
+.nav-logo span { font-style:italic; color:var(--accent); }
+.nav-links { display:flex; gap:2rem; align-items:center; }
+.nav-links a {
+  font-size:.78rem; font-weight:500; letter-spacing:.1em;
+  text-transform:uppercase; color:var(--ink); transition:color .2s;
+}
+.nav-links a:hover, .nav-links a.active { color:var(--accent); }
+.nav-right { display:flex; align-items:center; gap:1rem; flex-shrink:0; }
+.nav-icon-btn {
+  display:flex; align-items:center; justify-content:center;
+  width:38px; height:38px; border-radius:50%;
+  transition:background .2s; color:var(--ink);
+}
+.nav-icon-btn:hover { background:var(--bg2); }
+.nav-cta {
+  background:var(--accent); color:#fff;
+  padding:.55rem 1.3rem; border-radius:2px;
+  font-size:.78rem; font-weight:600;
+  letter-spacing:.08em; text-transform:uppercase;
+  transition:background .22s;
+}
+.nav-cta:hover { background:var(--accent); }
+.hamburger {
+  display:none; flex-direction:column; gap:5px;
+  width:38px; height:38px; align-items:center; justify-content:center;
+  border-radius:4px; transition:background .2s;
+}
+.hamburger:hover { background:var(--bg2); }
+.hamburger span {
+  display:block; width:22px; height:2px;
+  background:var(--ink); border-radius:2px;
+  transition:transform .3s, opacity .3s;
+}
+.hamburger.open span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity:0; }
+.hamburger.open span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+.mobile-menu {
+  position:fixed; top:var(--nav-h); left:0; right:0;
+  background:var(--bg); border-bottom:1px solid var(--border);
+  padding:1.5rem clamp(1rem,5vw,2rem) 2rem;
+  transform:translateY(-110%); transition:transform .35s ease;
+  z-index:190; box-shadow:0 8px 24px rgba(201,123,138,.08);
+}
+.mobile-menu.open { transform:translateY(0); }
+.mobile-menu a {
+  display:block; padding:.85rem 0;
+  font-size:.9rem; font-weight:500; letter-spacing:.08em;
+  text-transform:uppercase; border-bottom:1px solid var(--border);
+  color:var(--ink); transition:color .2s;
+}
+.mobile-menu a:last-of-type { border-bottom:none; }
+.mobile-menu a:hover { color:var(--accent); }
+.mobile-menu .mob-cta {
+  display:block; margin-top:1.2rem;
+  background:var(--accent); color:#fff; text-align:center;
+  padding:.8rem; border-radius:2px;
+  font-size:.82rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+}
+
+/* ─── BREADCRUMB ─── */
+.breadcrumb {
+  padding:.9rem clamp(1rem,5vw,3rem);
+  display:flex; align-items:center; gap:.5rem;
+  font-size:.75rem; color:var(--ink2); letter-spacing:.06em;
+}
+.breadcrumb a { color:var(--ink2); transition:color .2s; }
+.breadcrumb a:hover { color:var(--accent); }
+.breadcrumb svg { width:12px; height:12px; stroke:var(--ink2); stroke-width:2; fill:none; opacity:.5; }
+
+/* ─── PAGE HERO (inner pages) ─── */
+.page-hero {
+  background:var(--bg2);
+  padding:clamp(3rem,7vw,6rem) clamp(1rem,5vw,3rem) clamp(2rem,5vw,4rem);
+  text-align:center;
+}
+.page-hero .eyebrow {
+  display:block; font-size:.7rem; font-weight:600;
+  letter-spacing:.22em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:.9rem;
+}
+.page-hero h1 {
+  font-family:'Cormorant',serif;
+  font-size:clamp(2.2rem,5vw,3.8rem);
+  font-weight:400; line-height:1.1; color:var(--ink);
+  margin-bottom:1rem;
+}
+.page-hero h1 em { font-style:italic; color:var(--accent); }
+.page-hero p {
+  font-size:clamp(.88rem,1.5vw,1rem); color:var(--ink2);
+  max-width:540px; margin:0 auto; line-height:1.75;
+}
+
+/* ─── SECTION TITLES ─── */
+.sec-title { text-align:center; padding:clamp(2.5rem,5vw,4.5rem) clamp(1rem,4vw,2rem) clamp(1.2rem,2.5vw,2rem); }
+.sec-title .eyebrow {
+  display:block; font-size:.7rem; font-weight:600;
+  letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin-bottom:.9rem;
+}
+.sec-title h2 {
+  font-family:'Cormorant',serif;
+  font-size:clamp(2rem,4.5vw,3.2rem);
+  font-weight:400; line-height:1.15; color:var(--ink);
+}
+.sec-title h2 em { font-style:italic; color:var(--accent); }
+
+/* ─── PRODUCT CARDS ─── */
+.pcard { position:relative; }
+.pcard-img {
+  position:relative; width:100%; aspect-ratio:3/4;
+  overflow:hidden; border-radius:3px;
+  background:var(--bg2); margin-bottom:.9rem;
+}
+.pcard-img img { width:100%; height:100%; object-fit:cover; transition:transform .65s ease; }
+.pcard:hover .pcard-img img { transform:scale(1.07); }
+.pcard-badge {
+  position:absolute; top:.8rem; left:.8rem; z-index:1;
+  background:var(--accent); color:#fff;
+  font-size:.62rem; font-weight:600; letter-spacing:.1em;
+  text-transform:uppercase; padding:.22rem .6rem; border-radius:1px;
+}
+.pcard-name { font-family:'Cormorant',serif; font-size:1.05rem; font-weight:400; color:var(--ink); margin-bottom:.25rem; }
+.pcard-sub { font-size:.75rem; color:var(--ink2); margin-bottom:.5rem; }
+.pcard-foot { display:flex; align-items:center; justify-content:space-between; }
+.pcard-price { font-size:.95rem; font-weight:600; color:var(--accent); }
+.add-btn {
+  display:flex; align-items:center; justify-content:center;
+  width:36px; height:36px; border-radius:2px;
+  background:var(--accent); color:#fff; transition:background .2s;
+}
+.add-btn:hover { background:var(--accent); }
+.add-btn svg { width:16px; height:16px; stroke:#fff; stroke-width:2.5; fill:none; }
+
+/* ─── BUTTONS ─── */
+.btn-rose {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--accent); color:#fff;
+  padding:.75rem 1.8rem; border-radius:2px;
+  font-size:.82rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  transition:background .22s; border:none; cursor:pointer; font-family:'Outfit',sans-serif;
+}
+.btn-rose:hover { background:var(--accent); }
+.btn-rose svg { width:16px; height:16px; stroke:#fff; stroke-width:2; fill:none; }
+
+.btn-outline {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:transparent; color:var(--ink);
+  padding:.72rem 1.7rem; border-radius:2px;
+  font-size:.82rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  border:1.5px solid var(--border); transition:border-color .2s, color .2s;
+  cursor:pointer; font-family:'Outfit',sans-serif;
+}
+.btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+.btn-outline svg { width:16px; height:16px; stroke:currentColor; stroke-width:2; fill:none; }
+
+.btn-sage {
+  display:inline-flex; align-items:center; gap:.5rem;
+  background:var(--accent); color:#fff;
+  padding:.75rem 1.8rem; border-radius:2px;
+  font-size:.82rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  transition:background .22s; border:none; cursor:pointer; font-family:'Outfit',sans-serif;
+}
+.btn-sage:hover { background:var(--accent3); }
+.btn-sage svg { width:16px; height:16px; stroke:#fff; stroke-width:2; fill:none; }
+
+/* ─── TICKER ─── */
+.ticker {
+  background:var(--accent); color:#fff;
+  padding:.7rem 0; overflow:hidden; white-space:nowrap;
+}
+.ticker-track {
+  display:inline-flex; gap:0;
+  animation:ticker 28s linear infinite;
+}
+.ticker-track span {
+  font-size:.72rem; font-weight:500; letter-spacing:.13em;
+  text-transform:uppercase; padding:0 2rem; opacity:.9;
+}
+.ticker-track .sep { color:var(--accent2); padding:0; font-size:.8rem; }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ─── STARS ─── */
+.stars-row { display:flex; gap:2px; }
+.stars-row svg { width:14px; height:14px; fill:var(--accent); stroke:none; }
+
+/* ─── FORMS ─── */
+.form-group { margin-bottom:1.2rem; }
+.form-label {
+  display:block; font-size:.72rem; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--ink);
+  margin-bottom:.5rem;
+}
+.form-input, .form-select, .form-textarea {
+  width:100%; border:1.5px solid var(--border);
+  padding:.78rem 1rem; border-radius:2px;
+  font-family:'Outfit',sans-serif; font-size:.9rem;
+  background:#fff; color:var(--ink); outline:none;
+  transition:border-color .2s;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color:var(--accent); }
+.form-textarea { resize:vertical; min-height:130px; }
+
+/* ─── FOOTER ─── */
+footer {
+  background:#fdeef0;color:var(--ink); color:#fff;
+  padding:clamp(3rem,5vw,4.5rem) clamp(1rem,4vw,3rem) clamp(1.5rem,3vw,2rem);
+}
+.foot-top {
+  display:grid; grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:clamp(1.5rem,4vw,3rem);
+  padding-bottom:clamp(2rem,4vw,3rem);
+  border-bottom:1px solid var(--border);
+}
+.foot-brand .logo {
+  font-family:'Cormorant',serif; font-size:1.45rem; font-weight:600;
+  color:var(--accent2); display:block; margin-bottom:.9rem;
+}
+.foot-brand .logo span { font-style:italic; color:var(--accent2); }
+.foot-brand p { font-size:.82rem; color:var(--ink2); line-height:1.7; max-width:220px; }
+.foot-col h4 {
+  font-size:.68rem; font-weight:600; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--accent2); margin-bottom:1.1rem;
+}
+.foot-col a { display:block; font-size:.82rem; color:var(--ink2); margin-bottom:.55rem; transition:color .2s; }
+.foot-col a:hover { color:var(--ink); }
+.foot-bottom {
+  padding-top:clamp(1.2rem,3vw,2rem);
+  display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;
+}
+.foot-bottom p { font-size:.75rem; color:var(--ink2); }
+.social-links { display:flex; gap:1rem; }
+.social-links a {
+  display:flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:50%;
+  border:1px solid var(--border);
+  color:var(--ink2); transition:border-color .2s, color .2s;
+}
+.social-links a:hover { border-color:var(--accent2); color:var(--accent2); }
+.social-links svg { width:15px; height:15px; stroke:currentColor; stroke-width:1.8; fill:none; }
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:900px) {
+  .nav-links, .nav-cta { display:none; }
+  .hamburger { display:flex; }
+  .foot-top { grid-template-columns:1fr 1fr; }
+  .foot-brand { grid-column:1/-1; }
+}
+@media(max-width:560px) {
+  .foot-bottom { flex-direction:column; text-align:center; }
+}
+
+</style>
+<style>
+/* ─── ABOUT PAGE ─── */
+
+/* Split intro */
+.about-intro {
+  margin-top:var(--nav-h);
+  display:grid; grid-template-columns:1fr 1fr;
+  min-height:90vh;
+}
+.about-intro-img {
+  position:relative; overflow:hidden;
+}
+.about-intro-img img { width:100%; height:100%; object-fit:cover; }
+.about-intro-img-badge {
+  position:absolute; bottom:2rem; right:2rem;
+  background:var(--bg); border-radius:3px;
+  padding:1.2rem 1.5rem; box-shadow:0 4px 24px rgba(0,0,0,.12);
+  text-align:center;
+}
+.about-intro-img-badge .big { font-family:'Cormorant',serif; font-size:2.8rem; font-weight:600; color:var(--accent); line-height:1; }
+.about-intro-img-badge .label { font-size:.72rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--ink2); }
+
+.about-intro-copy {
+  background:var(--bg2); padding:clamp(3rem,7vw,7rem) clamp(2rem,5vw,5rem);
+  display:flex; flex-direction:column; justify-content:center;
+}
+.about-intro-copy .eyebrow { display:block; font-size:.7rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin-bottom:1.2rem; }
+.about-intro-copy h1 { font-family:'Cormorant',serif; font-size:clamp(2.2rem,4vw,3.4rem); font-weight:400; line-height:1.12; color:var(--ink); margin-bottom:1.5rem; }
+.about-intro-copy h1 em { font-style:italic; color:var(--accent); }
+.about-intro-copy p { font-size:clamp(.88rem,1.3vw,.98rem); color:var(--ink2); line-height:1.8; margin-bottom:1.2rem; }
+.about-intro-copy a { display:inline-flex; align-items:center; gap:.5rem; font-size:.78rem; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); border-bottom:1.5px solid var(--accent); padding-bottom:2px; transition:color .2s,border-color .2s; margin-top:.5rem; }
+.about-intro-copy a svg { width:14px; height:14px; stroke:currentColor; stroke-width:2; fill:none; }
+.about-intro-copy a:hover { color:var(--accent); border-color:var(--accent); }
+
+/* Stats bar */
+.stats-bar {
+  background:var(--accent); color:#fff;
+  display:grid; grid-template-columns:repeat(4,1fr);
+  text-align:center;
+}
+.stat { padding:clamp(1.8rem,4vw,3rem) 1rem; border-right:1px solid rgba(255,255,255,.1); }
+.stat:last-child { border-right:none; }
+.stat .num { font-family:'Cormorant',serif; font-size:clamp(2rem,4vw,3rem); font-weight:400; color:var(--accent2); }
+.stat .lbl { font-size:.75rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; opacity:.7; margin-top:.3rem; }
+
+/* Values */
+.values-section {
+  padding:clamp(4rem,7vw,6rem) clamp(1rem,5vw,3rem);
+  max-width:1200px; margin:0 auto;
+}
+.values-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2rem; margin-top:3rem; }
+.value-card {
+  padding:2rem; border:1px solid var(--border); border-radius:3px;
+  background:#fff; transition:box-shadow .3s;
+}
+.value-card:hover { box-shadow:0 6px 30px rgba(201,123,138,.08); }
+.value-icon { width:52px; height:52px; border-radius:50%; background:var(--bg2); display:flex; align-items:center; justify-content:center; margin-bottom:1.2rem; }
+.value-icon svg { width:24px; height:24px; stroke:var(--accent); stroke-width:1.8; fill:none; }
+.value-card h3 { font-family:'Cormorant',serif; font-size:1.15rem; font-weight:400; margin-bottom:.6rem; color:var(--ink); }
+.value-card p { font-size:.82rem; color:var(--ink2); line-height:1.7; }
+
+/* Team */
+.team-section {
+  background:var(--bg2);
+  padding:clamp(4rem,7vw,6rem) clamp(1rem,5vw,3rem);
+}
+.team-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:clamp(1rem,2vw,1.8rem); margin-top:3rem; }
+.team-card { text-align:center; }
+.team-img {
+  width:100%; aspect-ratio:3/4;
+  overflow:hidden; border-radius:3px; margin-bottom:1.1rem;
+  background:var(--accent2);
+}
+.team-img img { width:100%; height:100%; object-fit:cover; transition:transform .6s ease; }
+.team-card:hover .team-img img { transform:scale(1.06); }
+.team-name { font-family:'Cormorant',serif; font-size:1.1rem; font-weight:400; color:var(--ink); margin-bottom:.2rem; }
+.team-role { font-size:.75rem; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+
+/* Process timeline */
+.process-section { padding:clamp(4rem,7vw,6rem) clamp(1rem,5vw,3rem); max-width:900px; margin:0 auto; }
+.timeline { margin-top:3rem; position:relative; }
+.timeline::before { content:''; position:absolute; left:28px; top:0; bottom:0; width:1px; background:var(--border); }
+.tline-item { display:flex; gap:2rem; margin-bottom:2.5rem; position:relative; }
+.tline-dot {
+  width:56px; height:56px; border-radius:50%; flex-shrink:0;
+  background:var(--bg); border:1.5px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  position:relative; z-index:1;
+  box-shadow:0 0 0 4px var(--bg);
+}
+.tline-dot svg { width:22px; height:22px; stroke:var(--accent); stroke-width:1.8; fill:none; }
+.tline-body { padding-top:.8rem; }
+.tline-body h4 { font-family:'Cormorant',serif; font-size:1.1rem; font-weight:400; color:var(--ink); margin-bottom:.4rem; }
+.tline-body p { font-size:.84rem; color:var(--ink2); line-height:1.7; }
+
+/* Press / as seen in */
+.press-section {
+  padding:clamp(2.5rem,5vw,4rem) clamp(1rem,5vw,3rem);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  text-align:center;
+}
+.press-section p { font-size:.72rem; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--ink2); margin-bottom:2rem; }
+.press-logos { display:flex; align-items:center; justify-content:center; gap:clamp(2rem,5vw,4rem); flex-wrap:wrap; }
+.press-logo { font-family:'Cormorant',serif; font-size:clamp(1rem,2vw,1.4rem); font-weight:600; color:var(--border); letter-spacing:.05em; transition:color .3s; font-style:italic; }
+.press-logo:hover { color:var(--ink2); }
+
+/* CTA banner */
+.about-cta {
+  padding:clamp(4rem,7vw,6rem) clamp(1rem,5vw,3rem);
+  text-align:center; background:var(--bg2);color:var(--ink);
+}
+.about-cta .eyebrow { display:block; font-size:.7rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--accent2); margin-bottom:1rem; }
+.about-cta h2 { font-family:'Cormorant',serif; font-size:clamp(2rem,4vw,3.2rem); font-weight:400; line-height:1.15; margin-bottom:1rem; }
+.about-cta h2 em { font-style:italic; color:var(--accent2); }
+.about-cta p { font-size:.9rem; opacity:.65; max-width:420px; margin:0 auto 2.5rem; line-height:1.7; }
+.about-cta-btns { display:flex; justify-content:center; gap:1rem; flex-wrap:wrap; }
+
+@media(max-width:900px) {
+  .about-intro { grid-template-columns:1fr; }
+  .about-intro-img { min-height:50vw; }
+  .stats-bar { grid-template-columns:repeat(2,1fr); }
+  .stat:nth-child(2) { border-right:none; }
+  .stat:nth-child(3) { border-top:1px solid rgba(255,255,255,.1); }
+  .values-grid { grid-template-columns:1fr 1fr; }
+  .team-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media(max-width:560px) {
+  .values-grid { grid-template-columns:1fr; }
+  .team-grid { grid-template-columns:repeat(2,1fr); }
+  .stats-bar { grid-template-columns:repeat(2,1fr); }
+  .about-cta-btns { flex-direction:column; align-items:center; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo">Bloom <span>&</span> Co</a>
+  <ul class="nav-links">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="occasions.html">Occasions</a></li>
+    <li><a href="subscriptions.html">Subscriptions</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-icon-btn" aria-label="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+    <button class="nav-icon-btn" aria-label="Cart"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></button>
+    <a href="contact.html" class="nav-cta">Order Now</a>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="shop.html">Shop</a><a href="occasions.html">Occasions</a>
+  <a href="subscriptions.html">Subscriptions</a><a href="about.html">About</a>
+  <a href="contact.html" class="mob-cta">Order Now</a>
+</div>
+
+<!-- SPLIT INTRO -->
+<div class="about-intro">
+  <div class="about-intro-img">
+    <img src="50.jpg" alt="Florist at work"/>
+    <div class="about-intro-img-badge">
+      <div class="big">8+</div>
+      <div class="label">Years of blooms</div>
+    </div>
+  </div>
+  <div class="about-intro-copy">
+    <span class="eyebrow">Our Story</span>
+    <h1>Grown From<br><em>Passion</em>,<br>Delivered With Care</h1>
+    <p>Bloom & Co was born in a small atelier with one florist, a market stall and an obsession with beautiful flowers. What started as a weekend farmers market stand has grown into one of the city's most loved flower studios — yet our philosophy remains the same.</p>
+    <p>Every stem we sell is chosen by hand. Every arrangement is made fresh that morning. And every delivery is a small act of joy we take seriously.</p>
+    <a href="shop.html">Explore our collection <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat"><div class="num">12,400+</div><div class="lbl">Happy customers</div></div>
+  <div class="stat"><div class="num">2</div><div class="lbl">Studio locations</div></div>
+  <div class="stat"><div class="num">96%</div><div class="lbl">Same-day success rate</div></div>
+  <div class="stat"><div class="num">100%</div><div class="lbl">Sustainably sourced</div></div>
+</div>
+
+<!-- VALUES -->
+<div class="values-section">
+  <div class="sec-title" style="padding-top:0">
+    <span class="eyebrow">What we stand for</span>
+    <h2>Our <em>Values</em></h2>
+  </div>
+  <div class="values-grid">
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0110 10c0 5.25-4 9.44-9 9.95V22"/><path d="M2 12C2 6.48 6.48 2 12 2"/><path d="M12 12L2 22"/></svg></div>
+      <h3>Sustainability First</h3>
+      <p>We work exclusively with eco-certified growers who prioritise soil health, water conservation and zero single-use plastic in their operations.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <h3>Made With Love</h3>
+      <p>Every bouquet is a creative work. Our florists pour genuine care into each arrangement — no assembly lines, no shortcuts.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <h3>Reliable Every Time</h3>
+      <p>We deliver on our promises — literally. A 96% same-day delivery rate isn't something we're satisfied with; we're working to make it 100%.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <h3>Community Rooted</h3>
+      <p>We're proud to be a local studio. We hire locally, source regionally where possible, and give back to the communities we serve.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+      <h3>Uncompromising Quality</h3>
+      <p>We reject up to 30% of any flower shipment that doesn't meet our freshness standards. If it doesn't delight us, it won't reach you.</p>
+    </div>
+    <div class="value-card">
+      <div class="value-icon"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+      <h3>Transparent Pricing</h3>
+      <p>No hidden fees, no surprise charges. What you see is what you pay — including VAT and delivery on orders over €60.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TEAM -->
+<div class="team-section">
+  <div class="sec-title" style="padding-top:0">
+    <span class="eyebrow">The people behind the blooms</span>
+    <h2>Meet the <em>Team</em></h2>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-img"><img src="51.jpg" alt="Laura"/></div>
+      <div class="team-name">Laura K.</div>
+      <div class="team-role">Founder & Head Florist</div>
+    </div>
+    <div class="team-card">
+      <div class="team-img"><img src="52.jpg" alt="Marta"/></div>
+      <div class="team-name">Marta S.</div>
+      <div class="team-role">Senior Florist, Riga</div>
+    </div>
+    <div class="team-card">
+      <div class="team-img"><img src="53.jpg" alt="Jānis"/></div>
+      <div class="team-name">Jānis B.</div>
+      <div class="team-role">Logistics & Delivery</div>
+    </div>
+    <div class="team-card">
+      <div class="team-img"><img src="54.jpg" alt="Ance"/></div>
+      <div class="team-name">Ance V.</div>
+      <div class="team-role">Florist, Rēzekne Studio</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROCESS TIMELINE -->
+<div class="process-section">
+  <div class="sec-title" style="padding-top:0">
+    <span class="eyebrow">From farm to door</span>
+    <h2>How We Work, <em>Every Day</em></h2>
+  </div>
+  <div class="timeline">
+    <div class="tline-item">
+      <div class="tline-dot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="tline-body"><h4>5:00 AM — Flower Market</h4><p>Our florists arrive at the wholesale market before dawn, hand-selecting only the freshest and most vibrant stems of the day.</p></div>
+    </div>
+    <div class="tline-item">
+      <div class="tline-dot"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0110 10c0 5.25-4 9.44-9 9.95V22"/><path d="M2 12C2 6.48 6.48 2 12 2"/></svg></div>
+      <div class="tline-body"><h4>7:00 AM — Conditioning</h4><p>Each flower is trimmed, stripped of excess foliage and placed in fresh water to hydrate and open naturally before arrangement.</p></div>
+    </div>
+    <div class="tline-item">
+      <div class="tline-dot"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+      <div class="tline-body"><h4>9:00 AM — Arranging</h4><p>Orders are hand-arranged by our florists, each bouquet uniquely composed with texture, colour and structure in mind.</p></div>
+    </div>
+    <div class="tline-item">
+      <div class="tline-dot"><svg viewBox="0 0 24 24"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/></svg></div>
+      <div class="tline-body"><h4>11:00 AM — Packaging</h4><p>Each arrangement is wrapped in our signature materials — tissue paper, branded box or ribbon — with a care card enclosed.</p></div>
+    </div>
+    <div class="tline-item">
+      <div class="tline-dot"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+      <div class="tline-body"><h4>From 12:00 PM — Deliveries</h4><p>Our drivers set out with orders, delivering to homes and offices across Riga and Rēzekne throughout the afternoon.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- PRESS -->
+<div class="press-section">
+  <p>As featured in</p>
+  <div class="press-logos">
+    <span class="press-logo">Vogue Living</span>
+    <span class="press-logo">Design Milk</span>
+    <span class="press-logo">Riga Now</span>
+    <span class="press-logo">The Florist</span>
+    <span class="press-logo">Bloom Mag</span>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="about-cta">
+  <span class="eyebrow">Ready to experience the difference?</span>
+  <h2>Let's Find Your<br><em>Perfect Bouquet</em></h2>
+  <p>Browse our collection, pick an occasion or start a subscription — we'll handle the rest.</p>
+  <div class="about-cta-btns">
+    <a href="shop.html" class="btn-rose">Shop Now <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    <a href="contact.html" class="btn-outline" style="border-color:var(--ink2);color:#fff">Get in Touch</a>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-top">
+    <div class="foot-brand"><span class="logo">Bloom <span>&</span> Co</span><p>Handcrafted floral arrangements grown with love, delivered with care.</p></div>
+    <div class="foot-col"><h4>Shop</h4><a href="shop.html">All Bouquets</a><a href="occasions.html">Occasions</a><a href="subscriptions.html">Subscriptions</a></div>
+    <div class="foot-col"><h4>Help</h4><a href="#">Delivery Info</a><a href="#">FAQs</a><a href="contact.html">Contact</a></div>
+    <div class="foot-col"><h4>Company</h4><a href="about.html">Our Story</a><a href="#">Blog</a><a href="#">Careers</a></div>
+  </div>
+  <div class="foot-bottom">
+    <p>© 2026 Bloom &amp; Co. All rights reserved.</p>
+    <div class="social-links">
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>20),{passive:true});
+const hamburger=document.getElementById('hamburger'),mobileMenu=document.getElementById('mobileMenu');
+hamburger.addEventListener('click',()=>{const o=hamburger.classList.toggle('open');mobileMenu.classList.toggle('open',o);document.body.style.overflow=o?'hidden':'';});
+mobileMenu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{hamburger.classList.remove('open');mobileMenu.classList.remove('open');document.body.style.overflow='';}));
+</script>
+</body>
+</html>

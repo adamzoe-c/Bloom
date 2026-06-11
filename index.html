@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Bloom & Co — Fresh Flowers, Riga & Rezekne</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ═══ TOKENS ═══ */
+:root{
+  --bg:       #fff8f5;
+  --bg2:      #fdeef0;
+  --ink:      #3d2a2e;
+  --ink2:     #9e7a80;
+  --accent:   #c97b8a;        /* terracotta */
+  --accent2:  #e8b4bc;        /* dusty blush */
+  --accent3:  #c4a0a8;        /* muted sage */
+  --dark:     #c97b8a;
+  --border:   rgba(201,123,138,.18);
+  --pop-bg:   #fff0f2;
+}
+
+/* ═══ RESET ═══ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Outfit',sans-serif;
+  background:var(--bg);color:var(--ink);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  cursor:none; /* custom cursor */
+}
+img{display:block;width:100%}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+button{cursor:none;font-family:inherit;border:none;background:none}
+
+/* ═══ CUSTOM CURSOR ═══ */
+.cursor{
+  position:fixed;z-index:9999;pointer-events:none;
+  width:10px;height:10px;border-radius:50%;
+  background:var(--accent2);
+  transform:translate(-50%,-50%);
+  transition:transform .12s ease,width .25s,height .25s,opacity .2s;
+}
+.cursor-ring{
+  position:fixed;z-index:9998;pointer-events:none;
+  width:36px;height:36px;border-radius:50%;
+  border:1.5px solid var(--accent2);
+  transform:translate(-50%,-50%);
+  transition:transform .35s ease,width .3s,height .3s,opacity .2s;
+  opacity:.5;
+}
+body:hover .cursor{opacity:1}
+a:hover ~ .cursor,button:hover ~ .cursor{width:20px;height:20px}
+
+/* ═══ NAV ═══ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(1.5rem,5vw,3.5rem);
+  height:66px;
+  background:rgba(247,242,235,.93);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+  transition:box-shadow .3s;
+}
+.nav.scrolled{box-shadow:0 2px 24px rgba(201,123,138,.08)}
+
+.nav-logo{
+  font-family:'Cormorant',serif;
+  font-size:1.6rem;font-weight:300;letter-spacing:.04em;
+  color:var(--ink);
+  display:flex;align-items:baseline;gap:.3rem;
+}
+.nav-logo em{font-style:italic;color:var(--accent)}
+
+.nav-center{display:flex;gap:2.5rem}
+.nav-center a{
+  font-size:.73rem;font-weight:500;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink2);
+  transition:color .2s;position:relative;
+}
+.nav-center a::after{
+  content:'';position:absolute;bottom:-4px;left:0;right:0;
+  height:1px;background:var(--accent);
+  transform:scaleX(0);transform-origin:left;transition:transform .25s;
+}
+.nav-center a:hover{color:var(--ink)}
+.nav-center a:hover::after{transform:scaleX(1)}
+
+.nav-right{display:flex;align-items:center;gap:.5rem}
+.nav-icon{
+  width:38px;height:38px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink2);transition:background .2s,color .2s;
+}
+.nav-icon:hover{background:var(--bg2);color:var(--ink)}
+.nav-icon svg{width:17px;height:17px;stroke:currentColor;stroke-width:1.8;fill:none}
+
+/* hamburger */
+.ham{
+  display:none;flex-direction:column;gap:5px;
+  width:38px;height:38px;align-items:center;justify-content:center;
+}
+.ham span{
+  display:block;width:20px;height:1.5px;
+  background:var(--accent);border-radius:2px;
+  transition:transform .3s,opacity .3s;
+}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+
+.drawer{
+  position:fixed;top:66px;left:0;right:0;z-index:190;
+  background:var(--bg);
+  padding:2rem clamp(1.5rem,5vw,3.5rem) 2.5rem;
+  border-bottom:1px solid var(--border);
+  transform:translateY(-105%);transition:transform .38s cubic-bezier(.77,0,.18,1);
+  box-shadow:0 12px 40px rgba(201,123,138,.10);
+}
+.drawer.open{transform:translateY(0)}
+.drawer a{
+  display:block;padding:1rem 0;
+  font-size:1rem;font-weight:400;letter-spacing:.06em;
+  text-transform:uppercase;border-bottom:1px solid var(--border);
+  color:var(--ink2);transition:color .2s,padding-left .2s;
+}
+.drawer a:hover{color:var(--accent);padding-left:.5rem}
+.drawer a:last-child{border-bottom:none}
+
+/* ═══ HERO CAROUSEL ═══ */
+.hero{
+  position:relative;
+  margin-top:66px;
+  height:calc(100svh - 66px);
+  min-height:520px;
+  overflow:hidden;
+  background:var(--bg2);
+}
+
+.track{
+  display:flex;height:100%;
+  transition:transform .75s cubic-bezier(.77,0,.175,1);
+  will-change:transform;
+}
+.slide{
+  min-width:100%;height:100%;
+  position:relative;overflow:hidden;flex-shrink:0;
+}
+.slide img{
+  width:100%;height:100%;object-fit:cover;
+  object-position:center;
+  transition:transform 8s ease;
+}
+/* subtle ken-burns on active slide */
+.slide.active img{transform:scale(1.04)}
+
+/* text — top of slide */
+.slide-copy{
+  position:absolute;top:0;left:0;right:0;
+  padding:clamp(2.5rem,6vw,4.5rem) clamp(1.5rem,6vw,4rem);
+  text-align:center;
+  pointer-events:none;
+}
+.slide-sub{
+  font-size:.68rem;font-weight:500;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--ink2);
+  margin-bottom:.7rem;display:block;
+  /* light text shadow for readability over image */
+  text-shadow:0 1px 8px rgba(247,242,235,.8);
+}
+.slide-h{
+  font-family:'Cormorant',serif;
+  font-size:clamp(3.5rem,10vw,8rem);
+  font-weight:300;line-height:.95;
+  color:var(--ink);
+  text-shadow:0 2px 20px rgba(247,242,235,.6);
+  letter-spacing:-.02em;
+}
+.slide-h em{font-style:italic;color:var(--accent)}
+
+/* CTA pill anchored near bottom */
+.slide-pill{
+  position:absolute;
+  bottom:clamp(2.5rem,6vh,5rem);
+  left:50%;transform:translateX(-50%);
+  background:rgba(255,248,245,.92);color:var(--ink);
+  padding:.8rem 2.6rem;border-radius:100px;
+  font-size:.85rem;font-weight:500;letter-spacing:.06em;
+  white-space:nowrap;pointer-events:all;
+  transition:background .22s,transform .22s;
+  display:inline-flex;align-items:center;gap:.6rem;
+}
+.slide-pill:hover{background:#fff;transform:translateX(-50%) translateY(-3px)}
+.slide-pill svg{width:14px;height:14px;stroke:#fff;stroke-width:2;fill:none}
+
+/* dots */
+.h-dots{
+  position:absolute;
+  bottom:clamp(1rem,3vh,2rem);
+  left:50%;transform:translateX(-50%);
+  display:flex;gap:.45rem;z-index:10;
+}
+.h-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:rgba(34,28,23,.25);
+  border:none;padding:0;transition:background .3s,width .35s;
+}
+.h-dot.on{background:var(--accent);width:20px;border-radius:3px}
+
+/* arrows */
+.h-arr{
+  position:absolute;top:50%;transform:translateY(-50%);
+  z-index:10;width:42px;height:42px;border-radius:50%;
+  background:rgba(247,242,235,.8);backdrop-filter:blur(8px);
+  border:1px solid var(--border);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:opacity .25s,background .2s;
+}
+.hero:hover .h-arr{opacity:.9}
+.h-arr:hover{opacity:1!important;background:#fff}
+.h-arr.l{left:1.2rem}
+.h-arr.r{right:1.2rem}
+.h-arr svg{width:17px;height:17px;stroke:currentColor;stroke-width:2;fill:none}
+
+/* ═══ TICKER ═══ */
+.ticker{
+  background:var(--accent2);color:#fff;
+  padding:.6rem 0;overflow:hidden;white-space:nowrap;
+}
+.tick-track{
+  display:inline-flex;
+  animation:tick 32s linear infinite;
+}
+.tick-track s{
+  text-decoration:none;
+  font-size:.68rem;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  padding:0 2.2rem;opacity:.92;
+}
+.tick-track .div{color:rgba(255,255,255,.5);padding:0 .2rem}
+@keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ═══ SECTION UTIL ═══ */
+.eyebrow-row{
+  display:flex;align-items:center;gap:.75rem;
+  font-size:.68rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:.9rem;
+}
+.eyebrow-row::before{content:'';width:2rem;height:1.5px;background:var(--accent)}
+
+h2.display{
+  font-family:'Cormorant',serif;
+  font-size:clamp(2.2rem,5vw,3.5rem);
+  font-weight:300;line-height:1.1;color:var(--ink);
+}
+h2.display em{font-style:italic;color:var(--accent)}
+
+/* ═══ COLLECTION ═══ */
+.collection{
+  padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,5vw,3.5rem);
+}
+.col-head{
+  display:flex;flex-wrap:wrap;
+  align-items:flex-end;justify-content:space-between;
+  gap:1rem;margin-bottom:clamp(2rem,4vw,3rem);
+}
+.see-all{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.8rem;color:var(--ink2);
+  border-bottom:1px solid var(--border);padding-bottom:.1rem;
+  transition:color .2s,border-color .2s;
+}
+.see-all:hover{color:var(--accent);border-color:var(--accent)}
+.see-all svg{width:13px;height:13px;stroke:currentColor;stroke-width:2;fill:none}
+
+/* card grid */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:clamp(.8rem,2vw,1.2rem);
+}
+@media(min-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
+
+.card{position:relative;cursor:none}
+.card-img{
+  position:relative;
+  aspect-ratio:2/3;
+  overflow:hidden;border-radius:clamp(12px,2vw,20px);
+  background:var(--bg2);margin-bottom:.8rem;
+}
+.card-img img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .7s cubic-bezier(.25,.46,.45,.94);
+}
+.card:hover .card-img img{transform:scale(1.07)}
+
+.card-chip{
+  position:absolute;bottom:.8rem;left:.8rem;
+  background:rgba(255,248,245,.92);color:var(--ink);
+  font-size:.6rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  padding:.28rem .75rem;border-radius:100px;
+}
+.card-chip.new{background:var(--accent)}
+
+.card-name{
+  font-family:'Cormorant',serif;
+  font-size:1.15rem;font-weight:400;color:var(--ink);
+  margin-bottom:.2rem;
+}
+.card-meta{
+  display:flex;align-items:center;justify-content:space-between;
+}
+.card-price{font-size:.92rem;font-weight:500;color:var(--ink2)}
+.card-add{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,transform .2s;
+}
+.card-add:hover{background:var(--accent2);transform:scale(1.12)}
+.card-add svg{width:12px;height:12px;stroke:#fff;stroke-width:2.5;fill:none}
+
+/* ═══ ABOUT ═══ */
+.about{
+  padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,5vw,3.5rem);
+  background:var(--bg2);
+}
+.about-grid{
+  display:grid;gap:3rem;
+  align-items:center;
+}
+@media(min-width:860px){
+  .about-grid{grid-template-columns:1fr 1fr}
+}
+
+/* image block */
+.about-visual{position:relative;max-width:480px}
+.about-frame{
+  border-radius:clamp(16px,3vw,28px);
+  overflow:hidden;aspect-ratio:3/4;
+  position:relative;
+}
+/* decorative outline ring */
+.about-frame::after{
+  content:'';position:absolute;
+  inset:-8px;border-radius:inherit;
+  border:2px dashed rgba(184,92,56,.25);
+  pointer-events:none;border-radius:clamp(22px,4vw,34px);
+}
+.about-frame img{width:100%;height:100%;object-fit:cover}
+
+.year-tag{
+  position:absolute;top:1.5rem;right:-1.2rem;
+  background:#fff;color:var(--ink);border:1px solid var(--border);
+  border-radius:14px;padding:1rem 1.3rem;
+  text-align:center;
+  box-shadow:0 6px 24px rgba(201,123,138,.12);
+  z-index:2;
+}
+.year-tag small{
+  font-size:.58rem;font-weight:500;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink2);display:block;margin-bottom:.3rem;
+}
+.year-tag strong{
+  font-family:'Cormorant',serif;font-size:2rem;font-weight:300;
+  display:block;line-height:1;color:var(--accent);
+}
+
+/* info rows */
+.about-info{margin:1.5rem 0 2rem}
+.info-row{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:1rem}
+.info-icon{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  background:rgba(184,92,56,.12);
+  display:flex;align-items:center;justify-content:center;
+}
+.info-icon svg{width:15px;height:15px;stroke:var(--accent);stroke-width:1.8;fill:none}
+.info-text b{display:block;font-size:.85rem;font-weight:600;color:var(--ink);margin-bottom:.15rem}
+.info-text span{font-size:.78rem;color:var(--ink2);line-height:1.55}
+
+.about-btns{display:flex;flex-wrap:wrap;gap:.75rem}
+.btn-solid{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--accent);color:#fff;
+  padding:.8rem 1.8rem;border-radius:100px;
+  font-size:.82rem;font-weight:500;letter-spacing:.04em;
+  transition:background .2s,transform .18s;
+}
+.btn-solid:hover{background:var(--accent2);color:var(--ink);transform:translateY(-2px)}
+.btn-solid svg{width:15px;height:15px;stroke:#fff;stroke-width:2;fill:none}
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:.55rem;
+  border:1.5px solid rgba(34,28,23,.2);color:var(--ink2);
+  padding:.75rem 1.6rem;border-radius:100px;
+  font-size:.82rem;font-weight:500;letter-spacing:.04em;
+  transition:border-color .2s,color .2s;
+}
+.btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn-ghost svg{width:15px;height:15px;stroke:currentColor;stroke-width:1.8;fill:none}
+
+/* ═══ FEATURES STRIP ═══ */
+.feats{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+@media(min-width:700px){.feats{grid-template-columns:repeat(4,1fr)}}
+
+.feat{
+  padding:clamp(1.8rem,4vw,2.8rem) clamp(1rem,3vw,2rem);
+  text-align:center;border-right:1px solid var(--border);
+}
+.feat:last-child,.feat:nth-child(2){border-right:none}
+@media(min-width:700px){
+  .feat:nth-child(2){border-right:1px solid var(--border)}
+  .feat:last-child{border-right:none}
+}
+.feat-ico{
+  width:46px;height:46px;border-radius:50%;
+  background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto .9rem;
+}
+.feat-ico svg{width:20px;height:20px;stroke:var(--accent);stroke-width:1.7;fill:none}
+.feat h3{font-family:'Cormorant',serif;font-size:1.05rem;font-weight:400;margin-bottom:.35rem}
+.feat p{font-size:.76rem;color:var(--ink2);line-height:1.65}
+
+/* ═══ TESTIMONIALS ═══ */
+.testis{
+  padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,5vw,3.5rem);
+  background:var(--bg2);
+}
+.tgrid{
+  display:grid;gap:1rem;margin-top:2.5rem;
+}
+@media(min-width:700px){.tgrid{grid-template-columns:repeat(3,1fr)}}
+
+.tcard{
+  background:var(--bg);padding:1.8rem;
+  border-radius:16px;border:1px solid var(--border);
+}
+.tstars{display:flex;gap:3px;margin-bottom:.9rem}
+.tstars svg{width:13px;height:13px;fill:var(--accent);stroke:none}
+.tcard q{
+  display:block;
+  font-family:'Cormorant',serif;font-size:1.02rem;font-style:italic;font-weight:300;
+  line-height:1.65;color:var(--ink);margin-bottom:.9rem;quotes:none;
+}
+.tcard cite{font-size:.73rem;color:var(--ink2);font-style:normal;font-weight:500}
+
+/* ═══ NEWSLETTER ═══ */
+.nl{
+  padding:clamp(3rem,7vw,5.5rem) clamp(1.5rem,5vw,3.5rem);
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+}
+.nl h2{margin:.6rem 0 .5rem}
+.nl p{font-size:.87rem;color:var(--ink2);max-width:360px;line-height:1.7;margin-bottom:2rem}
+.nl-form{
+  display:flex;max-width:400px;width:100%;
+  border:1.5px solid var(--border);border-radius:100px;
+  overflow:hidden;background:#fff;
+}
+.nl-form input{
+  flex:1;padding:.82rem 1.4rem;
+  font-family:'Outfit',sans-serif;font-size:.87rem;
+  background:transparent;color:var(--ink);border:none;outline:none;
+}
+.nl-form button{
+  background:var(--accent);color:#fff;
+  padding:.82rem 1.5rem;border-radius:0 100px 100px 0;
+  font-size:.75rem;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;white-space:nowrap;
+  transition:background .22s;border:none;cursor:none;font-family:inherit;
+}
+.nl-form button:hover{background:var(--accent2);color:var(--ink)}
+
+/* ═══ FOOTER ═══ */
+footer{
+  background:#fdeef0;color:var(--ink);
+  padding:clamp(3rem,5vw,4.5rem) clamp(1.5rem,5vw,3.5rem) 2rem;
+}
+.foot-grid{
+  display:grid;gap:2.5rem;
+  grid-template-columns:1fr 1fr;
+  padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.08);
+}
+@media(min-width:700px){.foot-grid{grid-template-columns:2fr 1fr 1fr 1fr}}
+
+.foot-logo{
+  font-family:'Cormorant',serif;font-size:1.5rem;font-weight:300;
+  color:var(--accent);display:block;margin-bottom:.8rem;letter-spacing:.04em;
+}
+.foot-logo em{font-style:italic}
+.foot-brand p{font-size:.8rem;color:var(--ink2);line-height:1.75;max-width:200px}
+.foot-brand{grid-column:1/-1}
+@media(min-width:700px){.foot-brand{grid-column:auto}}
+
+.foot-col h4{
+  font-size:.64rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:1rem;
+}
+.foot-col a{
+  display:block;font-size:.8rem;color:var(--ink2);
+  margin-bottom:.5rem;transition:color .2s;
+}
+.foot-col a:hover{color:var(--accent)}
+
+.foot-bot{
+  padding-top:2rem;
+  border-top:1px solid var(--border);
+  display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1rem;
+}
+.foot-bot p{font-size:.72rem;color:var(--ink2)}
+.socials{display:flex;gap:.8rem}
+.socials a{
+  width:32px;height:32px;border-radius:50%;
+  border:1px solid var(--border);color:var(--ink2);
+  display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s;
+}
+.socials a:hover{border-color:var(--accent);color:var(--accent)}
+.socials svg{width:14px;height:14px;stroke:currentColor;stroke-width:1.8;fill:none}
+
+/* ═══ QUICK ORDER ═══ */
+.qo-btn{
+  position:fixed;
+  bottom:clamp(1.4rem,4vw,2.2rem);
+  right:clamp(1.4rem,4vw,2.2rem);
+  z-index:400;
+  display:flex;align-items:center;gap:.65rem;
+  background:var(--accent);color:#fff;
+  padding:.78rem 1.35rem .78rem .9rem;
+  border-radius:100px;
+  font-size:.85rem;font-weight:500;
+  box-shadow:0 4px 28px rgba(201,123,138,.15);
+  transition:transform .22s,box-shadow .22s,background .2s;
+  border:none;font-family:inherit;cursor:none;
+}
+.qo-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 36px rgba(28,21,18,.4);
+  background:#b5606f;
+}
+.qo-ico{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--accent2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.qo-ico svg{width:14px;height:14px;stroke:var(--dark);stroke-width:2.5;fill:none}
+
+/* backdrop */
+.backdrop{
+  position:fixed;inset:0;z-index:450;
+  background:rgba(201,123,138,.18);
+  backdrop-filter:blur(5px);
+  opacity:0;pointer-events:none;transition:opacity .3s;
+}
+.backdrop.on{opacity:1;pointer-events:all}
+
+/* popup */
+.qo-pop{
+  position:fixed;
+  bottom:calc(clamp(1.4rem,4vw,2.2rem) + 62px);
+  right:clamp(1.4rem,4vw,2.2rem);
+  z-index:460;
+  width:min(340px,calc(100vw - 2.8rem));
+  background:#fff8f5;color:var(--ink);
+  border-radius:22px;padding:2rem;
+  box-shadow:0 24px 64px rgba(201,123,138,.18);
+  transform:translateY(12px) scale(.96);
+  opacity:0;pointer-events:none;
+  transition:transform .38s cubic-bezier(.34,1.56,.64,1),opacity .3s;
+}
+.qo-pop.on{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
+
+.pop-close{
+  position:absolute;top:1rem;right:1rem;
+  width:30px;height:30px;border-radius:50%;
+  background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink2);
+  transition:background .2s;border:none;cursor:none;
+}
+.pop-close:hover{background:var(--border)}
+.pop-close svg{width:13px;height:13px;stroke:currentColor;stroke-width:2.5;fill:none}
+
+.pop-label{
+  display:flex;align-items:center;gap:.55rem;
+  font-size:.63rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink2);margin-bottom:1.1rem;
+}
+.pop-label-ico{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--accent2);
+  display:flex;align-items:center;justify-content:center;
+}
+.pop-label-ico svg{width:11px;height:11px;stroke:var(--dark);stroke-width:2.5;fill:none}
+
+.qo-pop h3{
+  font-family:'Cormorant',serif;
+  font-size:1.55rem;font-weight:300;font-style:italic;
+  line-height:1.2;margin-bottom:.8rem;
+}
+.qo-pop p{font-size:.83rem;color:var(--ink2);line-height:1.7;margin-bottom:1.5rem}
+.pop-cta{
+  display:inline-flex;align-items:center;gap:.55rem;
+  background:var(--accent);color:#fff;
+  padding:.78rem 1.7rem;border-radius:100px;
+  font-size:.83rem;font-weight:600;
+  transition:background .2s,transform .18s;
+  border:none;cursor:none;font-family:inherit;
+}
+.pop-cta:hover{background:var(--accent2);color:var(--ink);transform:translateY(-1px)}
+.pop-cta svg{width:14px;height:14px;stroke:#fff;stroke-width:2;fill:none}
+
+/* ═══ RESPONSIVE EXTRAS ═══ */
+@media(max-width:860px){
+  .nav-center{display:none}
+  .ham{display:flex}
+  body,button{cursor:auto}
+  .cursor,.cursor-ring{display:none}
+}
+@media(max-width:560px){
+  .h-arr{display:none}
+  .foot-bot{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<!-- custom cursor -->
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="curRing"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo">Bloom <em>&</em> Co</a>
+  <ul class="nav-center">
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="occasions.html">Occasions</a></li>
+    <li><a href="subscriptions.html">Subscriptions</a></li>
+    <li><a href="about.html">About</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="nav-icon" aria-label="Search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </button>
+    <button class="nav-icon" aria-label="Cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    </button>
+    <button class="ham" id="ham" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="drawer" id="drawer">
+  <a href="shop.html">Shop</a>
+  <a href="occasions.html">Occasions</a>
+  <a href="subscriptions.html">Subscriptions</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- ═══ HERO CAROUSEL ═══ -->
+<section class="hero" id="hero">
+  <div class="track" id="track">
+
+    <div class="slide active">
+      <img src="1.jpg" alt="Fresh flowers"/>
+      <div class="slide-copy">
+        <span class="slide-sub">Fresh Flowers · Riga &amp; Rezekne</span>
+        <h1 class="slide-h">Petal<br><em>Perfect</em></h1>
+      </div>
+      <a href="shop.html" class="slide-pill">
+        Explore the Collection
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="slide">
+      <img src="2.jpg" alt="Summer blooms"/>
+      <div class="slide-copy">
+        <span class="slide-sub">Summer Collection 2026</span>
+        <h1 class="slide-h">In Full<br><em>Bloom</em></h1>
+      </div>
+      <a href="shop.html" class="slide-pill">
+        Shop Now
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+    <div class="slide">
+      <img src="3.jpg" alt="Gifting"/>
+      <div class="slide-copy">
+        <span class="slide-sub">Weekly Subscriptions</span>
+        <h1 class="slide-h">Flowers<br><em>Every Week</em></h1>
+      </div>
+      <a href="subscriptions.html" class="slide-pill">
+        Subscribe
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+  <div class="h-dots" id="dots">
+    <button class="h-dot on"></button>
+    <button class="h-dot"></button>
+    <button class="h-dot"></button>
+  </div>
+  <button class="h-arr l" aria-label="Prev">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="h-arr r" aria-label="Next">
+    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+</section>
+
+<!-- ═══ TICKER ═══ -->
+<div class="ticker" aria-hidden="true">
+  <div class="tick-track">
+    <s>Same-Day Delivery</s><span class="div">·</span>
+    <s>Sustainably Grown</s><span class="div">·</span>
+    <s>Hand-Arranged</s><span class="div">·</span>
+    <s>Free Delivery Over €60</s><span class="div">·</span>
+    <s>Subscriptions</s><span class="div">·</span>
+    <s>Corporate Orders</s><span class="div">·</span>
+    <s>Same-Day Delivery</s><span class="div">·</span>
+    <s>Sustainably Grown</s><span class="div">·</span>
+    <s>Hand-Arranged</s><span class="div">·</span>
+    <s>Free Delivery Over €60</s><span class="div">·</span>
+    <s>Subscriptions</s><span class="div">·</span>
+    <s>Corporate Orders</s><span class="div">·</span>
+  </div>
+</div>
+
+<!-- ═══ COLLECTION ═══ -->
+<section class="collection">
+  <div class="col-head">
+    <div>
+      <div class="eyebrow-row">Collection</div>
+      <h2 class="display">Most popular<br><em>arrangements</em></h2>
+    </div>
+    <a href="shop.html" class="see-all">
+      Entire collection
+      <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+    </a>
+  </div>
+
+  <div class="cards">
+
+    <div class="card" onclick="location='dolce-product.html'">
+      <div class="card-img">
+        <span class="card-chip new">New</span>
+        <img src="4.jpg" alt="Sonata"/>
+      </div>
+      <div class="card-name">Sonata</div>
+      <div class="card-meta">
+        <span class="card-price">€ 140</span>
+        <button class="card-add" aria-label="Add"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+    </div>
+
+    <div class="card" onclick="location='dolce-product.html'">
+      <div class="card-img">
+        <img src="5.jpg" alt="Dolce"/>
+      </div>
+      <div class="card-name">Dolce</div>
+      <div class="card-meta">
+        <span class="card-price">€ 82</span>
+        <button class="card-add" aria-label="Add"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+    </div>
+
+    <div class="card" onclick="location='dolce-product.html'">
+      <div class="card-img">
+        <span class="card-chip">Seasonal</span>
+        <img src="6.jpg" alt="Aurora"/>
+      </div>
+      <div class="card-name">Aurora</div>
+      <div class="card-meta">
+        <span class="card-price">€ 95</span>
+        <button class="card-add" aria-label="Add"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+    </div>
+
+    <div class="card" onclick="location='dolce-product.html'">
+      <div class="card-img">
+        <img src="7.jpg" alt="Primavera"/>
+      </div>
+      <div class="card-name">Primavera</div>
+      <div class="card-meta">
+        <span class="card-price">€ 64</span>
+        <button class="card-add" aria-label="Add"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section class="about">
+  <div class="about-grid">
+
+    <div class="about-visual">
+      <div class="about-frame">
+        <img src="8.jpg" alt="Our studio"/>
+      </div>
+      <div class="year-tag">
+        <small>Since</small>
+        <strong>2024</strong>
+      </div>
+    </div>
+
+    <div>
+      <div class="eyebrow-row">About us</div>
+      <h2 class="display">Made with <em>heart</em>,<br>delivered with care</h2>
+
+      <div class="about-info">
+        <div class="info-row">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="info-text">
+            <b>Riga · Brivibas 118</b>
+            <span>Rezekne · Liberation Avenue 120-1</span>
+          </div>
+        </div>
+        <div class="info-row">
+          <div class="info-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="info-text">
+            <b>Riga: Mon–Fri 8–20 · Sat 9–20 · Sun 10–15</b>
+            <span>Rezekne: Mon–Fri 7:30–19 · Sat 8–19 · Sun 9–15</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-btns">
+        <a href="about.html" class="btn-solid">
+          Learn More
+          <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="https://instagram.com" target="_blank" class="btn-ghost">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          @blooms.co
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<div class="feats">
+  <div class="feat">
+    <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0110 10c0 5.25-4 9.44-9 9.95V22"/><path d="M2 12C2 6.48 6.48 2 12 2"/><path d="M12 12L2 22"/></svg></div>
+    <h3>Sustainably Grown</h3>
+    <p>Eco-certified farms, minimal footprint.</p>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+    <h3>Same-Day Delivery</h3>
+    <p>Order before 1 PM, arrive same evening.</p>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="14.48" x2="20" y2="20"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg></div>
+    <h3>Hand-Arranged</h3>
+    <p>Crafted daily by skilled in-house florists.</p>
+  </div>
+  <div class="feat">
+    <div class="feat-ico"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+    <h3>Personal Touch</h3>
+    <p>Handwritten cards for any occasion.</p>
+  </div>
+</div>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="testis">
+  <div class="eyebrow-row">Reviews</div>
+  <h2 class="display">Loved by <em>thousands</em></h2>
+  <div class="tgrid">
+    <div class="tcard">
+      <div class="tstars">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <q>Stunning arrangement, arrived perfectly on time and lasted over two weeks. My go-to florist.</q>
+      <cite>— Anna K., Riga</cite>
+    </div>
+    <div class="tcard">
+      <div class="tstars">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <q>Weekly subscription for three months — every delivery feels like a gift to myself. Worth every cent.</q>
+      <cite>— Mārtiņš L., Jūrmala</cite>
+    </div>
+    <div class="tcard">
+      <div class="tstars">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <q>Ordered for my mum's birthday on short notice. Arrived within hours, absolutely magnificent.</q>
+      <cite>— Sophie R., Tallinn</cite>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ NEWSLETTER ═══ -->
+<section class="nl">
+  <div class="eyebrow-row" style="justify-content:center">Stay connected</div>
+  <h2 class="display">Get <em>10% off</em><br>your first order</h2>
+  <p>Seasonal inspiration, exclusive offers and new arrivals — straight to your inbox.</p>
+  <div class="nl-form">
+    <input type="email" placeholder="Your email address" aria-label="Email"/>
+    <button type="button">Subscribe</button>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <span class="foot-logo">Bloom <em>&</em> Co</span>
+      <p>Handcrafted floral arrangements, grown with love and delivered with care across Riga &amp; Rezekne.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Shop</h4>
+      <a href="shop.html">All Bouquets</a>
+      <a href="occasions.html">Weddings</a>
+      <a href="subscriptions.html">Subscriptions</a>
+      <a href="shop.html">Corporate</a>
+    </div>
+    <div class="foot-col">
+      <h4>Help</h4>
+      <a href="contact.html">Delivery Info</a>
+      <a href="contact.html">FAQs</a>
+      <a href="#">Care Guide</a>
+      <a href="contact.html">Contact</a>
+    </div>
+    <div class="foot-col">
+      <h4>Company</h4>
+      <a href="about.html">Our Story</a>
+      <a href="about.html">Sustainability</a>
+      <a href="#">Blog</a>
+    </div>
+  </div>
+  <div class="foot-bot">
+    <p>© 2026 Bloom &amp; Co. All rights reserved.</p>
+    <div class="socials">
+      <a href="#" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      </a>
+      <a href="#" aria-label="Facebook">
+        <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+      </a>
+      <a href="#" aria-label="Pinterest">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12c0 4.24 2.65 7.86 6.39 9.29-.09-.78-.17-1.98.04-2.83.18-.76 1.22-5.16 1.22-5.16s-.31-.63-.31-1.56c0-1.46.85-2.55 1.9-2.55.9 0 1.33.67 1.33 1.48 0 .9-.58 2.26-.87 3.51-.25 1.05.52 1.9 1.54 1.9 1.85 0 3.09-2.36 3.09-5.15 0-2.13-1.44-3.62-3.5-3.62-2.38 0-3.78 1.79-3.78 3.64 0 .72.28 1.49.62 1.91a.25.25 0 01.06.24c-.06.26-.2.84-.23.96-.04.15-.13.19-.29.11-1.08-.5-1.75-2.09-1.75-3.36 0-2.73 1.98-5.24 5.72-5.24 3 0 5.33 2.14 5.33 5 0 2.97-1.87 5.36-4.47 5.36-.87 0-1.69-.45-1.97-1l-.54 2c-.19.75-.72 1.68-1.08 2.25.82.25 1.68.38 2.58.38 5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ QUICK ORDER ═══ -->
+<button class="qo-btn" id="qoBtn">
+  <div class="qo-ico">
+    <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+  </div>
+  Quick order
+</button>
+
+<div class="backdrop" id="backdrop"></div>
+
+<div class="qo-pop" id="qoPop">
+  <button class="pop-close" id="popClose">
+    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+  <div class="pop-label">
+    <div class="pop-label-ico">
+      <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+    </div>
+    Quick Order
+  </div>
+  <h3>Not sure what<br>to choose?</h3>
+  <p>Tell us your occasion — our florists will hand-pick the perfect arrangement just for you.</p>
+  <button class="pop-cta" onclick="location='contact.html'">
+    Order now
+    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+  </button>
+</div>
+
+<script>
+/* cursor */
+const cur = document.getElementById('cur');
+const ring = document.getElementById('curRing');
+if(cur && ring){
+  document.addEventListener('mousemove', e => {
+    cur.style.left = e.clientX+'px'; cur.style.top = e.clientY+'px';
+    ring.style.left = e.clientX+'px'; ring.style.top = e.clientY+'px';
+  });
+  document.querySelectorAll('a,button,.card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cur.style.width='18px';cur.style.height='18px';ring.style.width='52px';ring.style.height='52px'; });
+    el.addEventListener('mouseleave', () => { cur.style.width='';cur.style.height='';ring.style.width='';ring.style.height=''; });
+  });
+}
+
+/* nav scroll */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 30), {passive:true});
+
+/* hamburger */
+const ham = document.getElementById('ham');
+const drawer = document.getElementById('drawer');
+ham.addEventListener('click', () => {
+  const o = ham.classList.toggle('open');
+  drawer.classList.toggle('open', o);
+  document.body.style.overflow = o ? 'hidden' : '';
+});
+drawer.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  ham.classList.remove('open'); drawer.classList.remove('open'); document.body.style.overflow='';
+}));
+
+/* carousel */
+let idx = 0;
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.h-dot');
+const track = document.getElementById('track');
+let timer;
+
+function go(n){
+  slides[idx].classList.remove('active');
+  idx = (n + slides.length) % slides.length;
+  slides[idx].classList.add('active');
+  track.style.transform = `translateX(-${idx*100}%)`;
+  dots.forEach((d,i) => d.classList.toggle('on', i===idx));
+}
+function reset(){ clearInterval(timer); timer = setInterval(() => go(idx+1), 5500); }
+
+dots.forEach((d,i) => d.addEventListener('click', () => { go(i); reset(); }));
+document.querySelector('.h-arr.l').addEventListener('click', () => { go(idx-1); reset(); });
+document.querySelector('.h-arr.r').addEventListener('click', () => { go(idx+1); reset(); });
+
+/* touch swipe on hero */
+let tx=0;
+const heroEl = document.getElementById('hero');
+heroEl.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive:true});
+heroEl.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - tx;
+  if(Math.abs(dx) > 45){ go(idx + (dx<0?1:-1)); reset(); }
+}, {passive:true});
+reset();
+
+/* quick order */
+const qoBtn = document.getElementById('qoBtn');
+const qoPop = document.getElementById('qoPop');
+const backdrop = document.getElementById('backdrop');
+const popClose = document.getElementById('popClose');
+function openQO(){ qoPop.classList.add('on'); backdrop.classList.add('on'); document.body.style.overflow='hidden'; }
+function closeQO(){ qoPop.classList.remove('on'); backdrop.classList.remove('on'); document.body.style.overflow=''; }
+qoBtn.addEventListener('click', openQO);
+popClose.addEventListener('click', closeQO);
+backdrop.addEventListener('click', closeQO);
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeQO(); });
+</script>
+</body>
+</html>
