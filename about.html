@@ -312,13 +312,17 @@ footer {
 /* Split intro */
 .about-intro {
   margin-top:var(--nav-h);
-  display:grid; grid-template-columns:1fr 1fr;
-  min-height:90vh;
+  display:grid; grid-template-columns:1.05fr 1fr;
+  min-height:clamp(560px,calc(100vh - var(--nav-h)),820px);
 }
 .about-intro-img {
-  position:relative; overflow:hidden;
+  position:relative; overflow:hidden; background:var(--bg2);
 }
-.about-intro-img img { width:100%; height:100%; object-fit:cover; }
+/* absolute fill: the photo always covers the whole panel, never stretches the row */
+.about-intro-img img {
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; object-position:center 30%;
+}
 .about-intro-img-badge {
   position:absolute; bottom:2rem; right:2rem;
   background:var(--bg); border-radius:3px;
@@ -329,9 +333,10 @@ footer {
 .about-intro-img-badge .label { font-size:.72rem; font-weight:500; letter-spacing:.1em; text-transform:uppercase; color:var(--ink2); }
 
 .about-intro-copy {
-  background:var(--bg2); padding:clamp(3rem,7vw,7rem) clamp(2rem,5vw,5rem);
-  display:flex; flex-direction:column; justify-content:center;
+  background:var(--bg2); padding:clamp(3rem,6vw,6rem) clamp(2rem,6vw,6rem);
+  display:flex; flex-direction:column; justify-content:center; align-items:flex-start;
 }
+.about-intro-copy > * { max-width:34rem; }
 .about-intro-copy .eyebrow { display:block; font-size:.7rem; font-weight:600; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); margin-bottom:1.2rem; }
 .about-intro-copy h1 { font-family:'Cormorant',serif; font-size:clamp(2.2rem,4vw,3.4rem); font-weight:400; line-height:1.12; color:var(--ink); margin-bottom:1.5rem; }
 .about-intro-copy h1 em { font-style:italic; color:var(--accent); }
@@ -426,7 +431,8 @@ footer {
 
 @media(max-width:900px) {
   .about-intro { grid-template-columns:1fr; }
-  .about-intro-img { min-height:50vw; }
+  .about-intro { min-height:0; }
+  .about-intro-img { min-height:75vw; }
   .stats-bar { grid-template-columns:repeat(2,1fr); }
   .stat:nth-child(2) { border-right:none; }
   .stat:nth-child(3) { border-top:1px solid rgba(255,255,255,.1); }
