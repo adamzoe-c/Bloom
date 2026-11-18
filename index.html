@@ -132,98 +132,141 @@ a:hover ~ .cursor,button:hover ~ .cursor{width:20px;height:20px}
 
 /* ═══ HERO CAROUSEL ═══ */
 .hero{
+  --pad:clamp(1.25rem,5vw,4rem);
   position:relative;
   margin-top:66px;
   height:calc(100svh - 66px);
-  min-height:520px;
+  min-height:560px;
+  max-height:860px;
   overflow:hidden;
-  background:var(--bg2);
+  background:linear-gradient(120deg,var(--bg) 0%,var(--bg) 45%,var(--bg2) 100%);
 }
-
 .track{
   display:flex;height:100%;
   transition:transform .75s cubic-bezier(.77,0,.175,1);
   will-change:transform;
 }
 .slide{
-  min-width:100%;height:100%;
-  position:relative;overflow:hidden;flex-shrink:0;
+  min-width:100%;height:100%;flex-shrink:0;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;   /* mobile: image on top, text below */
 }
-.slide img{
-  width:100%;height:100%;object-fit:cover;
-  object-position:center;
+
+/* image */
+.slide-media{
+  order:-1;
+  flex:1 1 0;min-height:190px;
+  margin:.9rem var(--pad) 0;
+  border-radius:24px;overflow:hidden;
+  background:var(--bg2);
+  position:relative;
+}
+.slide-media img{
+  width:100%;height:100%;object-fit:cover;object-position:center;
   transition:transform 8s ease;
 }
-/* subtle ken-burns on active slide */
-.slide.active img{transform:scale(1.04)}
+.slide.active .slide-media img{transform:scale(1.05)}
 
-/* text — top of slide */
+/* text */
 .slide-copy{
-  position:absolute;top:0;left:0;right:0;
-  padding:clamp(2.5rem,6vw,4.5rem) clamp(1.5rem,6vw,4rem);
-  text-align:center;
-  pointer-events:none;
+  flex:none;
+  padding:1.5rem var(--pad) 4.6rem;
+  display:flex;flex-direction:column;align-items:flex-start;
+  text-align:left;
 }
 .slide-sub{
-  font-size:.68rem;font-weight:500;letter-spacing:.22em;
-  text-transform:uppercase;color:var(--ink2);
-  margin-bottom:.7rem;display:block;
-  /* light text shadow for readability over image */
-  text-shadow:0 1px 8px rgba(247,242,235,.8);
+  display:inline-flex;align-items:center;gap:.7rem;
+  font-size:.68rem;font-weight:500;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:.9rem;
 }
+.slide-sub::before{content:'';width:1.8rem;height:1.5px;background:var(--accent);flex:none}
 .slide-h{
   font-family:'Cormorant',serif;
-  font-size:clamp(3.5rem,10vw,8rem);
-  font-weight:300;line-height:.95;
-  color:var(--ink);
-  text-shadow:0 2px 20px rgba(247,242,235,.6);
-  letter-spacing:-.02em;
+  font-size:clamp(2.7rem,min(6.4vw,11svh),5.8rem);
+  font-weight:300;line-height:.96;letter-spacing:-.02em;
+  color:var(--ink);overflow-wrap:anywhere;
 }
 .slide-h em{font-style:italic;color:var(--accent)}
-
-/* CTA pill anchored near bottom */
+.slide-p{
+  margin-top:1rem;max-width:30rem;
+  font-size:.95rem;line-height:1.6;font-weight:300;color:var(--ink2);
+}
 .slide-pill{
-  position:absolute;
-  bottom:clamp(2.5rem,6vh,5rem);
-  left:50%;transform:translateX(-50%);
-  background:rgba(255,248,245,.92);color:var(--ink);
-  padding:.8rem 2.6rem;border-radius:100px;
-  font-size:.85rem;font-weight:500;letter-spacing:.06em;
-  white-space:nowrap;pointer-events:all;
-  transition:background .22s,transform .22s;
-  display:inline-flex;align-items:center;gap:.6rem;
+  margin-top:1.5rem;
+  display:inline-flex;align-items:center;gap:.7rem;
+  background:var(--ink);color:#fff;
+  padding:.9rem 1.7rem;border-radius:100px;
+  font-size:.85rem;font-weight:500;letter-spacing:.05em;
+  transition:background .22s,transform .22s,box-shadow .22s;
 }
-.slide-pill:hover{background:#fff;transform:translateX(-50%) translateY(-3px)}
-.slide-pill svg{width:14px;height:14px;stroke:#fff;stroke-width:2;fill:none}
+.slide-pill:hover{background:var(--accent);transform:translateY(-2px);box-shadow:0 10px 24px rgba(201,123,138,.3)}
+.slide-pill svg{width:15px;height:15px;stroke:#fff;stroke-width:2;fill:none;transition:transform .22s}
+.slide-pill:hover svg{transform:translateX(3px)}
 
-/* dots */
-.h-dots{
-  position:absolute;
-  bottom:clamp(1rem,3vh,2rem);
-  left:50%;transform:translateX(-50%);
-  display:flex;gap:.45rem;z-index:10;
+/* entrance animation */
+.slide-copy>*{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.slide.active .slide-copy>*{opacity:1;transform:none}
+.slide.active .slide-copy>*:nth-child(2){transition-delay:.08s}
+.slide.active .slide-copy>*:nth-child(3){transition-delay:.16s}
+.slide.active .slide-copy>*:nth-child(4){transition-delay:.24s}
+
+/* controls bar */
+.h-bar{
+  position:absolute;left:var(--pad);right:var(--pad);bottom:1.1rem;z-index:10;
+  display:flex;align-items:center;justify-content:space-between;gap:1rem;
 }
+.h-dots{display:flex;align-items:center}
 .h-dot{
-  width:5px;height:5px;border-radius:50%;
-  background:rgba(34,28,23,.25);
-  border:none;padding:0;transition:background .3s,width .35s;
-}
-.h-dot.on{background:var(--accent);width:20px;border-radius:3px}
-
-/* arrows */
-.h-arr{
-  position:absolute;top:50%;transform:translateY(-50%);
-  z-index:10;width:42px;height:42px;border-radius:50%;
-  background:rgba(247,242,235,.8);backdrop-filter:blur(8px);
-  border:1px solid var(--border);color:var(--ink);
+  width:22px;height:30px;padding:0;position:relative;
   display:flex;align-items:center;justify-content:center;
-  opacity:0;transition:opacity .25s,background .2s;
 }
-.hero:hover .h-arr{opacity:.9}
-.h-arr:hover{opacity:1!important;background:#fff}
-.h-arr.l{left:1.2rem}
-.h-arr.r{right:1.2rem}
-.h-arr svg{width:17px;height:17px;stroke:currentColor;stroke-width:2;fill:none}
+.h-dot::before{
+  content:'';display:block;width:6px;height:6px;border-radius:3px;
+  background:rgba(61,42,46,.25);transition:background .3s,width .35s;
+}
+.h-dot.on::before{background:var(--accent);width:22px}
+.h-count{
+  font-family:'Cormorant',serif;font-size:1rem;letter-spacing:.12em;color:var(--ink2);
+  margin-left:auto;margin-right:.4rem;
+}
+.h-count b{color:var(--ink);font-weight:600}
+.h-arrows{display:flex;gap:.5rem}
+.h-arr{
+  width:42px;height:42px;border-radius:50%;
+  border:1px solid var(--border);color:var(--ink);background:rgba(255,255,255,.7);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,color .2s,border-color .2s;
+}
+.h-arr:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.h-arr svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
+
+/* very short phones: drop the paragraph so everything still fits */
+@media(max-width:899px) and (max-height:720px){
+  .slide-p{display:none}
+  .slide-media{min-height:150px}
+}
+
+/* desktop: side-by-side, arch-shaped image on the right */
+@media(min-width:900px){
+  .slide{flex-direction:row;align-items:stretch}
+  .slide-copy{
+    flex:0 0 47.6%;
+    justify-content:center;
+    padding:2rem 2rem 5.5rem var(--pad);
+  }
+  .slide-media{
+    order:0;flex:1 1 0;min-height:0;
+    margin:1.5rem var(--pad) 1.5rem 0;
+    border-radius:999px 999px 28px 28px;
+  }
+  .slide-p{font-size:1.02rem}
+  .h-bar{right:calc(52.4% + 1rem);bottom:2rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .track,.slide-media img,.slide-copy>*{transition:none}
+  .slide.active .slide-media img{transform:none}
+}
 
 /* ═══ TICKER ═══ */
 .ticker{
@@ -623,7 +666,6 @@ footer{
   .cursor,.cursor-ring{display:none}
 }
 @media(max-width:560px){
-  .h-arr{display:none}
   .foot-bot{flex-direction:column;text-align:center}
 }
 </style>
@@ -663,58 +705,53 @@ footer{
 </div>
 
 <!-- ═══ HERO CAROUSEL ═══ -->
-<section class="hero" id="hero">
+<section class="hero" id="hero" aria-roledescription="carousel" aria-label="Featured">
   <div class="track" id="track">
 
     <div class="slide active">
-      <img src="1.jpg" alt="Fresh flowers"/>
       <div class="slide-copy">
         <span class="slide-sub">Fresh Flowers · Riga &amp; Rezekne</span>
         <h1 class="slide-h">Petal<br><em>Perfect</em></h1>
+        <p class="slide-p">Handcrafted bouquets, made fresh every morning and delivered with care across Riga &amp; Rezekne.</p>
+        <a href="shop.html" class="slide-pill">Explore the Collection <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
-      <a href="shop.html" class="slide-pill">
-        Explore the Collection
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
+      <div class="slide-media"><img src="1.jpg" alt="Fresh flowers" fetchpriority="high"/></div>
     </div>
 
     <div class="slide">
-      <img src="2.jpg" alt="Summer blooms"/>
       <div class="slide-copy">
         <span class="slide-sub">Summer Collection 2026</span>
         <h1 class="slide-h">In Full<br><em>Bloom</em></h1>
+        <p class="slide-p">Sun-warmed colours and seasonal stems, gathered into arrangements made for long summer days.</p>
+        <a href="shop.html" class="slide-pill">Shop Now <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
-      <a href="shop.html" class="slide-pill">
-        Shop Now
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
+      <div class="slide-media"><img src="2.jpg" alt="Summer blooms" loading="lazy"/></div>
     </div>
 
     <div class="slide">
-      <img src="3.jpg" alt="Gifting"/>
       <div class="slide-copy">
         <span class="slide-sub">Weekly Subscriptions</span>
         <h1 class="slide-h">Flowers<br><em>Every Week</em></h1>
+        <p class="slide-p">A fresh bouquet at your door on your schedule. Pause or cancel whenever you like.</p>
+        <a href="subscriptions.html" class="slide-pill">Subscribe <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
       </div>
-      <a href="subscriptions.html" class="slide-pill">
-        Subscribe
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
+      <div class="slide-media"><img src="3.jpg" alt="Gifting" loading="lazy"/></div>
     </div>
 
   </div>
 
-  <div class="h-dots" id="dots">
-    <button class="h-dot on"></button>
-    <button class="h-dot"></button>
-    <button class="h-dot"></button>
+  <div class="h-bar">
+    <div class="h-dots" id="dots">
+      <button class="h-dot on" aria-label="Slide 1"></button>
+      <button class="h-dot" aria-label="Slide 2"></button>
+      <button class="h-dot" aria-label="Slide 3"></button>
+    </div>
+    <div class="h-count"><b id="cnt">01</b> / 03</div>
+    <div class="h-arrows">
+      <button class="h-arr l" aria-label="Previous"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="h-arr r" aria-label="Next"><svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
   </div>
-  <button class="h-arr l" aria-label="Prev">
-    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-  </button>
-  <button class="h-arr r" aria-label="Next">
-    <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-  </button>
 </section>
 
 <!-- ═══ TICKER ═══ -->
@@ -1045,7 +1082,10 @@ function go(n){
   slides[idx].classList.add('active');
   track.style.transform = `translateX(-${idx*100}%)`;
   dots.forEach((d,i) => d.classList.toggle('on', i===idx));
+  slides.forEach((sl,i) => sl.inert = i!==idx);
+  document.getElementById('cnt').textContent = String(idx+1).padStart(2,'0');
 }
+slides.forEach((sl,i) => sl.inert = i!==0);
 function reset(){ clearInterval(timer); timer = setInterval(() => go(idx+1), 5500); }
 
 dots.forEach((d,i) => d.addEventListener('click', () => { go(i); reset(); }));
